@@ -20,9 +20,50 @@ namespace S24Week11DbFirstApproach
     /// </summary>
     public partial class MainWindow : Window
     {
+        // create an instance of context class
+        SchoolDBEntities db = new SchoolDBEntities();
+
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private void LoadStudents()
+        {
+            var students = db.Students.ToList();
+            grdStudents.ItemsSource = students;
+        }
+
+        private void btnLoadData_Click(object sender, RoutedEventArgs e)
+        {
+            LoadStudents();
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            var standards = db.Standards.ToList();
+
+            cmbStandard.ItemsSource = standards;
+            cmbStandard.DisplayMemberPath = "StandardName";
+            cmbStandard.SelectedValuePath = "StandardId";
+        }
+
+        private void btnFind_Click(object sender, RoutedEventArgs e)
+        {
+            int id = int.Parse(txtId.Text);
+            var student = db.Students.Find(id);
+
+            if (student != null)
+            {
+                txtName.Text = student.StudentName;
+                cmbStandard.SelectedValue = student.StandardId;
+            }
+            else
+            {
+                txtName.Text = "";
+                cmbStandard.SelectedIndex = -1;
+                MessageBox.Show("Invalid ID. Please try again.");
+            }
         }
     }
 }
