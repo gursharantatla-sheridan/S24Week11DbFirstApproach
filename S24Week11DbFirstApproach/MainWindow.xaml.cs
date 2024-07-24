@@ -30,7 +30,12 @@ namespace S24Week11DbFirstApproach
 
         private void LoadStudents()
         {
-            var students = db.Students.ToList();
+            //var students = db.Students.ToList();
+
+            var students = (from std in db.Students
+                           select new { std.StudentID, std.StudentName, std.Standard.StandardName }).ToList();
+
+
             grdStudents.ItemsSource = students;
         }
 
@@ -109,12 +114,14 @@ namespace S24Week11DbFirstApproach
             // LINQ - Language INtegrated Query
 
             // query syntax
-            var students = (from std in db.Students
-                           where std.StudentName.Contains(txtName.Text)
-                           select std).ToList();
+            //var students = (from std in db.Students
+            //               where std.StudentName.Contains(txtName.Text)
+            //               select std).ToList();
 
             // method syntax
-
+            var students = db.Students
+                                .Where(s => s.StudentName.Contains(txtName.Text))
+                                .ToList();
 
 
             grdStudents.ItemsSource = students;
