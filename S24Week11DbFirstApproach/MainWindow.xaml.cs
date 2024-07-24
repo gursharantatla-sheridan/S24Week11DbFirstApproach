@@ -78,5 +78,46 @@ namespace S24Week11DbFirstApproach
             LoadStudents();
             MessageBox.Show("New student added");
         }
+
+        private void btnUpdate_Click(object sender, RoutedEventArgs e)
+        {
+            int id = int.Parse(txtId.Text);
+            var std = db.Students.Find(id);
+
+            std.StudentName = txtName.Text;
+            std.StandardId = (int)cmbStandard.SelectedValue;
+
+            db.SaveChanges();
+            LoadStudents();
+            MessageBox.Show("Student updated");
+        }
+
+        private void btnDelete_Click(object sender, RoutedEventArgs e)
+        {
+            int id = int.Parse(txtId.Text);
+            var std = db.Students.Find(id);
+
+            db.Students.Remove(std);
+            db.SaveChanges();
+
+            LoadStudents();
+            MessageBox.Show("Student deleted");
+        }
+
+        private void btnSearch_Click(object sender, RoutedEventArgs e)
+        {
+            // LINQ - Language INtegrated Query
+
+            // query syntax
+            var students = (from std in db.Students
+                           where std.StudentName.Contains(txtName.Text)
+                           select std).ToList();
+
+            // method syntax
+
+
+
+            grdStudents.ItemsSource = students;
+        }
     }
 }
